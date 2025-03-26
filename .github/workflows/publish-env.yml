@@ -1,0 +1,26 @@
+name: Publish Environment on qBraid
+
+on:
+  workflow_dispatch:
+    inputs:
+      env_config_path:
+        description: "Path to the yaml config file"
+        required: true
+        type: string 
+        default: '.qbraid-env.yaml'
+      wait_for_completion:
+        description: "Wait for the environment to be published"
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  publish_env:
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Publish Environment
+        uses: qBraid/publish-environment-action@v1
+        with:
+          env_config_path: ${{ github.event.inputs.env_config_path }}
+          wait_for_completion: ${{ github.event.inputs.wait_for_completion }}
+          qbraid_api_key: ${{ secrets.QBRAID_API_KEY }}

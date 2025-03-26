@@ -1,0 +1,14 @@
+# Sample qBraid environment configuration
+name: "example-action-environment"
+description: "Environment for testing environment publish action."
+tags:
+  - "qbraid"
+  - "environment"
+  - "core"
+  - "action"
+icon: "icon.png"
+python_version: "3.11.6"
+kernel_name: "Python 3[qbraid-action-test]"
+shell_prompt: "qbraid_action_test"
+python_packages:
+  qbraid-core: ">=0.1.36"

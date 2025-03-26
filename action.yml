@@ -1,0 +1,92 @@
+name: 'Publish Environment on qBraid'
+description: 'A GitHub Action to remotely publish environments on qBraid'
+author: 'Harshit Gupta <harshit@qbraid.com>'
+
+branding:
+  icon: 'upload-cloud'
+  color: 'purple'
+
+inputs:
+  env_config_path:
+    description: 'Path to the yaml config file'
+    required: true
+    type: string
+    default: '.qbraid-env.yaml'
+  wait_for_completion:
+    description: 'Wait for the environment to be published'
+    required: true
+    type: boolean
+    default: false
+  qbraid_api_key:
+    description: 'API Key for qBraid'
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        pip install 'qbraid-core[environments]>=0.1.36'
+
+    - name: Publish Environment
+      env:
+        QBRAID_API_KEY: ${{ inputs.qbraid_api_key }}
+        ENV_CONFIG_PATH: ${{ inputs.env_config_path }}
+      shell: bash
+      run: |
+        python3 -c "import os;
+        from qbraid_core.services.environments.schema import EnvironmentConfig;
+        from qbraid_core.services.environments.client import EnvironmentManagerClient;
+
+        # Load the environment config 
+        config_path = os.environ['ENV_CONFIG_PATH'];
+        config = EnvironmentConfig.from_yaml(config_path);
+        print(f'Successfully validated configuration from {config_path}!');
+
+        # Make request to publish 
+        client = EnvironmentManagerClient();
+        response = client.remote_publish_environment(file_path = config_path);
+
+        # Print the slug and set it as an env variable
+        env_slug = response['envSlug'];
+        print(f'Successfully published environment with slug: {env_slug}');
+
+        with open(os.getenv('GITHUB_ENV'), 'a') as envs_file:
+          envs_file.write(f'ENV_SLUG={env_slug}\n');
+        "
+
+    - name: Wait for Env Completion
+      if: ${{ inputs.wait_for_completion }}
+      env:
+        QBRAID_API_KEY: ${{ inputs.qbraid_api_key }}
+      shell: bash
+      run: |
+        python3 -c "
+        import os;
+        from qbraid_core.services.environments.client import EnvironmentManagerClient;
+
+        env_slug = os.getenv('ENV_SLUG');
+        client = EnvironmentManagerClient();
+
+        # Wait for the environment to be published
+        try:
+          success = client.wait_for_env_remote_publish(env_slug);
+          print(f'Environment publish completed, status: {success}');
+          if not success:
+            exit(1);
+        except Exception as e:
+          print(f'Error in environment publish request: {e}');
+          exit(1);
+        "
