@@ -1,5 +1,5 @@
 name: 'Publish Environment on qBraid'
-description: 'A GitHub Action to remotely publish environments on qBraid'
+description: 'A GitHub Action to create and request to publish a new environment on qBraid.'
 author: 'Harshit Gupta <harshit@qbraid.com>'
 
 branding:
@@ -23,7 +23,7 @@ inputs:
     type: boolean
     default: false
   api-key:
-    description: 'API Key for qBraid'
+    description: 'qBraid API key'
     required: true
     type: string
 
@@ -43,7 +43,7 @@ runs:
     - name: Install Dependencies
       shell: bash
       run: |
-        pip install 'qbraid-core[environments]>=0.1.36'
+        pip install -r requirements.txt
 
     - name: Publish Environment
       env:
@@ -52,7 +52,7 @@ runs:
         PERSIST_ENV: ${{ inputs.persist-env }}
       shell: bash
       run: |
-        python3 scripts/remote_publish.py
+        python3 src/remote_publish.py
 
     - name: Wait for Env Completion
       if: ${{ inputs.wait-for-completion }}
@@ -60,4 +60,4 @@ runs:
         QBRAID_API_KEY: ${{ inputs.api-key }}
       shell: bash
       run: |
-        python3 scripts/wait_for_completion.py
+        python3 src/wait_for_completion.py
