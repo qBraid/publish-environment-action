@@ -1,4 +1,4 @@
-# publish-environment-action
+# qBraid Publish Environment Action
 
 GitHub Action to create and request to publish a new environment on qBraid.
 
@@ -11,24 +11,22 @@ This action automates the process of publishing Python environments to the qBrai
 ```yaml
 uses: qBraid/publish-environment-action@v1
 with:
-  environment-file: '.qbraid.yaml'
-  wait-for-completion: false
-  persist-env: false
   api-key: ${{ secrets.QBRAID_API_KEY }}
+  environment-file: '.qbraid.yaml'
 ```
 
 ## Inputs
 
 | Input | Description | Required | Default |
 |-------|-------------|----------|---------|
+| `api-key` | qBraid API key | Yes | - |
 | `environment-file` | Path to the YAML config file | No | `.qbraid.yaml` |
 | `wait-for-completion` | Wait for the environment to be published | No | `false` |
 | `persist-env` | Persist the environment in qBraid account after the workflow ends | No | `false` |
-| `api-key` | qBraid API key | Yes | - |
 
 ## Example
 
-- Create a new workflow file `publish.yml` in the `.github/workflows` directory of your project
+- Create a new workflow file `.github/workflows/qbraid-env.yml` 
 - Add a secret to the repository with the name `QBRAID_API_KEY` and the value set to your [qBraid API key](https://docs.qbraid.com/home/account#api-keys). See [how to add a secret to a GitHub repository](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository).
 - Add the following content to the workflow file to trigger the action manually:
 
@@ -44,10 +42,10 @@ jobs:
       - name: Publish Environment
         uses: qBraid/publish-environment-action@v1
         with:
-          environment-file: '.qbraid.yaml'
+          api-key: ${{ secrets.QBRAID_API_KEY }}
+          environment-file: .qbraid.yaml
           wait-for-completion: false
           persist-env: false
-          api-key: ${{ secrets.QBRAID_API_KEY }}
 ```
 
 - The above workflow will:
@@ -63,7 +61,7 @@ name: "example-environment"
 description: "Environment for testing environment publish action."
 tags:
   - "qbraid"
-  - "environment" 
+  - "environment"
 
 # add path to the icon file in the repository (optional)
 icon: "icon.png"
@@ -73,11 +71,10 @@ kernel_name: "Python 3 [name-of-kernel]"
 shell_prompt: "shell_prompt"
 
 python_packages:
-  # add your package name and version 
-  # to publish
-  your_package: "package-version-string"
+  # add your package name and optional version
+  your_package: ""
 
-  # add any extra python packages
+  # add any other python packages that may be useful
   numpy: "1.21.2"
   pandas: ">=1.3.3"
 
