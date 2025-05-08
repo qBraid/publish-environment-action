@@ -22,12 +22,18 @@ import sys
 from qbraid_core.services.environments.client import EnvironmentManagerClient
 
 
-def wait_for_environment_publish(client: EnvironmentManagerClient, env_slug: str) -> bool:
+def wait_for_environment_publish(
+    client: EnvironmentManagerClient, env_slug: str
+) -> bool:
     """Waits for the environment to be published and returns the exit code."""
     try:
-        print(f"Waiting for publishing process to complete for environment: {env_slug}...")
+        print(
+            f"Waiting for publishing process to complete for environment: {env_slug}..."
+        )
         success = client.wait_for_env_remote_publish(env_slug)
-        print(f"Publish environment process {'completed successfully' if success else 'failed'}")
+        print(
+            f"Publish environment process {'completed successfully' if success else 'failed'}"
+        )
         return success
     except Exception as e:
         print(f"Error in environment publish request: \n\t{e}")
