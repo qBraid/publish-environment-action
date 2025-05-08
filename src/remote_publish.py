@@ -45,7 +45,9 @@ def publish_environment(config: EnvironmentConfig, persist_env: bool) -> str:
     """Publishes the environment and retrieves the environment slug."""
     try:
         client = EnvironmentManagerClient()
-        response = client.remote_publish_environment(config=config, persist_env=persist_env)
+        response = client.remote_publish_environment(
+            config=config, persist_env=persist_env
+        )
         env_slug = response["envSlug"]
         print("Request validated. Initializing environment creation process...")
         print(f"Environment slug: {env_slug}")

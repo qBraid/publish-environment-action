@@ -1,1 +1,1 @@
-qbraid-core[environments]>=0.1.36
+qbraid-core[environments]>=0.1.37
