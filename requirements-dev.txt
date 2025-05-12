@@ -1,0 +1,6 @@
+qbraid-core[environments]>=0.1.37
+qbraid-cli>=0.10.3
+pytest 
+pytest-mock 
+black 
+isort 

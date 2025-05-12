@@ -1,4 +1,4 @@
-# qBraid Publish Environment Action
+# <img src="icon.png" height=60px align='center'> qBraid Publish Environment Action
 
 GitHub Action to create and request to publish a new environment on qBraid.
 
