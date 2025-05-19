@@ -1,4 +1,4 @@
-name: 'Publish Environment on qBraid'
+name: 'Publish Environment on qBraid Platform'
 description: 'A GitHub Action to create and request to publish a new environment on qBraid.'
 author: 'Harshit Gupta <harshit@qbraid.com>'
 
