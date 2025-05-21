@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest 
     steps:
       - name: Publish Environment
-        uses: qBraid/publish-environment-action@v1
+        uses: qBraid/publish-environment-action@v1.0.0
         with:
           api-key: ${{ secrets.QBRAID_API_KEY }}
           environment-file: .qbraid.yaml
